@@ -1,7 +1,5 @@
-// Alamat kontrak dari hasil deployment Hardhat
-export const contractAddress = "0xD38cDebabbde54D53f1E8699f93364c228Fb7Bfe";
+export const contractAddress = import.meta.env.VITE_CONTRACT_ADDRESS; 
 
-// ABI dari file artifacts/contracts/BukuTamu.sol/BukuTamu.json
 export const contractABI = [
   {
     inputs: [
