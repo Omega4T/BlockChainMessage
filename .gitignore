@@ -1,0 +1,57 @@
+# Dependencies
+node_modules/
+package-lock.json
+yarn.lock
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# Build outputs
+/build
+/dist
+/artifacts
+/cache
+
+# Hardhat
+cache/
+artifacts/
+
+# Truffle
+.build/
+build/
+
+# Coverage directory
+coverage/
+coverage.json
+
+# IDE and editor files
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# Debug logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+debug.log
+
+# System files
+.DS_Store
+Thumbs.db
+
+# Contract specific
+/deployments
+.openzeppelin/
+
+# Testing
+coverage/
+typechain/
+typechain-types/
+
+# Miscellaneous
+.tmp/
+.temp/
