@@ -23,6 +23,13 @@ function WalletCard() {
   checkExistingConnection();
 }, []); 
 
+  useEffect(() => {
+  // Hanya jalankan jika defaultAccount sudah ada (bukan null)
+  if (defaultAccount) {
+    getAccountBalance(defaultAccount);
+  }
+}, [defaultAccount]);
+
   const connectWalletHandler = async () => {
     if (window.ethereum) {
       try {
@@ -41,7 +48,6 @@ function WalletCard() {
 
   const accountChangedHandler = (newAccount) => {
     setDefaultAccount(newAccount);
-    getAccountBalance(newAccount);
   };
 
   const getAccountBalance = async (account) => {
