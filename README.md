@@ -2,7 +2,7 @@
 
 <div align="center">
 
-![Vercel Deployment](https://img.shields.io/vercel/deployment/Omega4T/BlockChainMessage?style=for-the-badge)
+[![Deployed on Vercel](https://img.shields.io/badge/Deployed%20on-Vercel-black?style=for-the-badge&logo=vercel&logoColor=white)](https://block-chain-message.vercel.app/)
 ![GitHub License](https://img.shields.io/github/license/Omega4T/BlockChainMessage?style=for-the-badge)
 
 </div>
@@ -125,3 +125,4 @@ The smart contract is publicly deployed on the Sepolia Testnet.
 **[View Contract on Etherscan](https://sepolia.etherscan.io/address/YOUR_SEPOLIA_CONTRACT_ADDRESS)**
 
 ---
+
