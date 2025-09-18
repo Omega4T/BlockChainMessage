@@ -1,71 +1,62 @@
 import { useState, useEffect } from "react";
-import { ethers } from "ethers";
-import { contractAddress, contractABI } from "./contractInfo";
 
-function BlockChainMessage() {
+function BlockChainMessage({contract}) {
   const [message, setMessage] = useState("");
   const [inputMessage, setInputMessage] = useState("");
-  const [_provider, setProvider] = useState(null);
-  const [_signer, setSigner] = useState(null);
-  const [contract, setContract] = useState(null);
   const [txStatus, setTxStatus] = useState("idle");
+  const [txSuccessMessage, setTxSuccessMessage] = useState("");
 
   useEffect(() => {
-
-    async function init() {
-      if (typeof window.ethereum !== "undefined") {
-        const newProvider = new ethers.BrowserProvider(window.ethereum);
-        setProvider(newProvider);
-
-        const newSigner = await newProvider.getSigner();
-        setSigner(newSigner);
-
-        const newContract = new ethers.Contract(
-          contractAddress,
-          contractABI,
-          newSigner
-        );
-        setContract(newContract);
+    const fetchMessage = async () => {
+      if (contract) { 
+        try {
+          const savedMessage = await contract.getMessage();
+          setMessage(savedMessage);
+        } catch (error) {
+          console.error("Failed to fetch message:", error);
+          setMessage("Could not fetch message from contract.");
+        }
       } else {
-        alert("MetaMask not installed!");
+        setMessage("Please connect your wallet to interact.");
       }
-    }
-    init();
-  }, []);
+    };
 
-  async function fetchMessage() {
-    if (contract) {
-      try {
-        const savedMessage = await contract.getMessage();
-        setMessage(savedMessage);
-      } catch (error) {
-        console.error("Failed to fetch message:", error);
-      }
-    }
-  }
-
-  useEffect(() => {
     fetchMessage();
   }, [contract]); 
 
   async function handleSubmitMessage(event) {
     event.preventDefault();
-    if (contract && inputMessage.trim() !== "") {
-      try {
-        setTxStatus("pending");
-        const tx = await contract.setMessage(inputMessage);
+    if (!contract || inputMessage.trim() === "") return;
+    setTxStatus("idle");
+    setTxSuccessMessage("");
 
-        await tx.wait();
-        setTxStatus("success");
-        fetchMessage();
-        setInputMessage("");
-        fetchMessage();
-      } catch (error) {
-        setTxStatus("error");
-        console.error("Failed to send transaction:", error);
-      }
+    try {
+      setTxStatus("pending");
+      const tx = await contract.setMessage(inputMessage);
+
+      await tx.wait();
+      
+      setTxStatus("success");
+      setTxSuccessMessage("Transaction successful!");
+      
+      const savedMessage = await contract.getMessage();
+      setMessage(savedMessage);
+      setInputMessage("");
+
+    } catch (error) {
+      setTxStatus("error");
+      console.error("Failed to send transaction:", error);
     }
   }
+
+  useEffect(() => {
+    if (txStatus === 'success') {
+      const timer = setTimeout(() => {
+        setTxStatus('idle');
+      }, 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [txStatus]);
 
   return (
     <div
@@ -122,7 +113,7 @@ function BlockChainMessage() {
         </button>
       </form>
       {txStatus === "success" && (
-        <p style={{ color: "green", marginTop: "1rem" }}>Transaction Completed</p>
+        <p style={{ color: "green", marginTop: "1rem" }}>{txSuccessMessage}</p>
       )}
       {txStatus === "error" && (
         <p style={{ color: "red", marginTop: "1rem" }}>
